@@ -37,6 +37,7 @@ class BuyOrdersSink(Logic4Sink):
             payload = {
                 "CreditorId": record.get("supplier_remoteId"),
                 "CreatedAt": created_at,
+                "Remarks":record.get("id"),
                 "BuyOrderRows": PurchaseOrderLines,
             }
             return payload
