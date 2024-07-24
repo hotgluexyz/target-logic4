@@ -21,6 +21,7 @@ class Logic4Sink(HotglueSink):
         super().__init__(target, stream_name, schema, key_properties)
 
     base_url = "https://api.logic4server.nl"
+    allows_externalid = ["BuyOrders"]
 
     @property
     def authenticator(self):
