@@ -9,7 +9,7 @@ class BuyOrdersSink(Logic4Sink):
     """Qls target sink class."""
 
     name = "BuyOrders"
-    endpoint = "/v1/BuyOrders/CreateBuyOrhhhhder"
+    endpoint = "/v1/BuyOrders/CreateBuyOrder"
 
     def preprocess_record(self, record: dict, context: dict) -> dict:
 
