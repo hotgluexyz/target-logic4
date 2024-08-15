@@ -46,8 +46,10 @@ class BuyOrdersSink(Logic4Sink):
         """Process the record."""
         state_updates = dict()
         if record:
+            self.logger.info(f"Making request to endpoint='{self.endpoint}' with method: 'POST' and payload= {record}")
             response = self.request_api(
                 "POST", endpoint=self.endpoint, request_data=record
             )
+            self.logger.info(f"Response: {response.text}")
             order_id = response.json().get("Value").get("Id")
             return order_id, True, state_updates
