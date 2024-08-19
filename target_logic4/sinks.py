@@ -28,8 +28,12 @@ class BuyOrdersSink(Logic4Sink):
             line_item = {
                 "ProductId": item.get("product_remoteId"),
                 "QtyToOrder": item.get("quantity"),
-                "OrderedOnDateByDistributor": record.get("transaction_date"),
+                "QtyToDeliver": item.get("quantity"),
+                "OrderedOnDateByDistributor": record.get("transaction_date")
             }
+            if item.get("receipt_date"):
+                line_item["ExpectedDeliveryDate"] = item.get("receipt_date")
+
             PurchaseOrderLines.append(line_item)
 
         # send only buyorders with lines
@@ -40,6 +44,10 @@ class BuyOrdersSink(Logic4Sink):
                 "BuyOrderRows": PurchaseOrderLines,
                 "Remarks": record.get("remarks")
             }
+
+            if "branch_id" in record:
+                payload["BranchId"] = record.get("branch_id")
+
             return payload
 
     def upsert_record(self, record: dict, context: dict) -> None:
