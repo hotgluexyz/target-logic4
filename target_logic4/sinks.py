@@ -25,8 +25,9 @@ class BuyOrdersSink(Logic4Sink):
         PurchaseOrderLines = []
         line_items = self.parse_objs(record.get("line_items", "[]"))
         for item in line_items:
+            product_id = item.get("product_remoteId")
             line_item = {
-                "ProductId": item.get("product_remoteId"),
+                "ProductId": int(product_id) if product_id else None,
                 "QtyToOrder": item.get("quantity"),
                 "QtyToDeliver": item.get("quantity"),
                 "OrderedOnDateByDistributor": record.get("transaction_date")
@@ -38,15 +39,16 @@ class BuyOrdersSink(Logic4Sink):
 
         # send only buyorders with lines
         if len(PurchaseOrderLines):
+            creditor_id = record.get("supplier_remoteId")
             payload = {
-                "CreditorId": record.get("supplier_remoteId"),
+                "CreditorId": int(creditor_id) if creditor_id else None,
                 "CreatedAt": created_at,
                 "BuyOrderRows": PurchaseOrderLines,
                 "Remarks": record.get("remarks")
             }
 
-            if "branch_id" in record:
-                payload["BranchId"] = record.get("branch_id")
+            if record.get("branch_id"):
+                payload["BranchId"] = int(record["branch_id"])
 
             return payload
 
