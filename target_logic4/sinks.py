@@ -1,7 +1,6 @@
 """Logic4 target sink class, which handles writing streams."""
 
 import datetime
-
 from target_logic4.client import Logic4Sink
 
 
@@ -40,15 +39,17 @@ class BuyOrdersSink(Logic4Sink):
         # send only buyorders with lines
         if len(PurchaseOrderLines):
             creditor_id = record.get("supplier_remoteId")
+
+            # Fetch BranchId from the config file
+            branch_id = self._config.get("export_BranchId")
+
             payload = {
                 "CreditorId": int(creditor_id) if creditor_id else None,
                 "CreatedAt": created_at,
+                "BranchId": int(branch_id) if branch_id else "",  # Use BranchId from config
                 "BuyOrderRows": PurchaseOrderLines,
                 "Remarks": record.get("remarks")
             }
-
-            if record.get("branch_id"):
-                payload["BranchId"] = int(record["branch_id"])
 
             return payload
 
