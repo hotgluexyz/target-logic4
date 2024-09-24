@@ -13,8 +13,8 @@ class BuyOrdersSink(Logic4Sink):
     def preprocess_record(self, record: dict, context: dict) -> dict:
 
         created_at = (
-            record.get("created_at")
-            if record.get("created_at")
+            record.get("transaction_date")
+            if record.get("transaction_date")
             else datetime.datetime.now(datetime.timezone.utc).strftime(
                 "%Y-%m-%dT%H:%M:%S.%fZ"
             )
@@ -29,11 +29,10 @@ class BuyOrdersSink(Logic4Sink):
                 "ProductId": int(product_id) if product_id else None,
                 "QtyToOrder": item.get("quantity"),
                 "QtyToDeliver": item.get("quantity"),
-                "OrderedOnDateByDistributor": record.get("transaction_date")
+                "OrderedOnDateByDistributor":  created_at,
+                "ExpectedDeliveryDate": record.get("created_at")
             }
-            if item.get("receipt_date"):
-                line_item["ExpectedDeliveryDate"] = item.get("receipt_date")
-
+            
             PurchaseOrderLines.append(line_item)
 
         # send only buyorders with lines
