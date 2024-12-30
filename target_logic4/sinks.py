@@ -52,6 +52,8 @@ class BuyOrdersSink(Logic4Sink):
 
             return payload
 
+        return dict()
+
     def upsert_record(self, record: dict, context: dict) -> None:
         """Process the record."""
         state_updates = dict()
