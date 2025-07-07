@@ -20,3 +20,5 @@ plugins:
       kind: password
     - name: start_date
       value: '2010-01-01T00:00:00Z'
+    - name: Send_OrderedOnDateByDistributor
+      value: true
